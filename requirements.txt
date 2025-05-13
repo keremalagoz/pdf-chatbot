@@ -7,3 +7,9 @@ tiktoken
 numpy<2.0
 uuid
 langchain_community
+openai
+langchain_google
+langchain_core
+pydantic
+typing
+traceback

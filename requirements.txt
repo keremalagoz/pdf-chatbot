@@ -6,3 +6,4 @@ faiss-cpu
 tiktoken
 numpy<2.0
 uuid
+langchain_community

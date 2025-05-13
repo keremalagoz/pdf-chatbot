@@ -1,13 +1,8 @@
 streamlit
-openai
-pypdf2
+pypdf
 langchain
-langchain-huggingface
-sentence-transformers
+langchain-google-genai
 faiss-cpu
 tiktoken
-torch==2.1.2
-torchvision==0.16.2
-torchaudio==2.1.2
-numpy<2.0  # VEYA numpy==1.26.4 gibi belirli bir 1.x versiyonu
-langchain_community
+numpy<2.0
+uuid

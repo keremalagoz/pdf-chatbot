@@ -2,11 +2,11 @@ streamlit
 openai
 pypdf
 langchain  # Temel Langchain paketi
-# langchain_community # Eğer başka bir şey için gerekmiyorsa kaldırılabilir
+langchain_community # Eğer başka bir şey için gerekmiyorsa kaldırılabilir
 langchain-huggingface # YENİ PAKET
 sentence-transformers
 faiss-cpu
 tiktoken
 torch # Sentence-transformers tarafından istenir, versiyonu belirtilebilir
-# torchvision # Eğer torch ile ilgili sorun devam ederse, bazen bu da gerekir
-# torchaudio # Eğer torch ile ilgili sorun devam ederse, bazen bu da gerekir
+torchvision # Eğer torch ile ilgili sorun devam ederse, bazen bu da gerekir
+torchaudio # Eğer torch ile ilgili sorun devam ederse, bazen bu da gerekir

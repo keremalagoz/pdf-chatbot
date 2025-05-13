@@ -1,5 +1,5 @@
 streamlit
-pypdf
+pypdf2
 langchain
 langchain-google-genai
 faiss-cpu

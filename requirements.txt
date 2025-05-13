@@ -6,3 +6,5 @@ langchain_openai
 faiss-cpu
 tiktoken
 pypdf2
+langchain_community.vectorstores
+langchain_core

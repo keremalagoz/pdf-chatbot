@@ -3,10 +3,20 @@ from openai import OpenAI # OpenRouter LLM için
 import os
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-# OpenAIEmbeddings yerine HuggingFaceEmbeddings kullanacağız
-from langchain_community.embeddings import HuggingFaceEmbeddings # YENİ
-from langchain_community.vectorstores import FAISS
+from langchain_huggingface import HuggingFaceEmbeddings # <<< YENİ IMPORT
+from langchain_community.vectorstores import FAISS # FAISS için bu hala langchain_community'de olabilir, kontrol edin!
+                                                 # Langchain'in son versiyonlarında FAISS'in de yeri değişmiş olabilir.
+                                                 # Eğer FAISS için de hata alırsanız, onun da yeni import yolunu bulmanız gerekir.
+                                                 # Genellikle 'langchain_community.vectorstores.faiss' veya benzeri olur.
 from langchain_core.prompts import PromptTemplate
+
+# ... (kodun geri kalanı aynı) ...
+
+# Embedding nesnesini oluşturduğunuz satırda hata mesajında belirtilen:
+# /mount/src/chatbot/app.py:34: LangChainDeprecationWarning: The class `HuggingFaceEmbeddings`
+#  embeddings = HuggingFaceEmbeddings( # Bu satır artık yeni importu kullanmalı
+#      model_name=LOCAL_EMBEDDING_MODEL_NAME,
+#  )
 
 # --- Streamlit Secrets ve OpenRouter Konfigürasyonu ---
 OPENROUTER_API_KEY = st.secrets.get("OPENROUTER_API_KEY")

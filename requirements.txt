@@ -7,3 +7,4 @@ tiktoken
 numpy<2.0
 pydantic
 uuid
+openai

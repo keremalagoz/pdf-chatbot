@@ -150,7 +150,7 @@ This Streamlit application allows users to upload PDF files and ask questions ab
 
 ```txt
 streamlit
-pypdf
+pypdf2
 langchain
 langchain-google-genai
 faiss-cpu
@@ -158,3 +158,4 @@ tiktoken
 numpy<2.0
 pydantic
 uuid
+langchain_community

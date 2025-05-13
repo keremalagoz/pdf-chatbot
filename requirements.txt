@@ -8,3 +8,4 @@ tiktoken
 pypdf2
 langchain_community
 langchain_core
+sentence-transformers

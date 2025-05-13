@@ -1,22 +1,25 @@
-# 📚 Çoklu Sohbet PDF Asistanı / Multi-Session PDF Chat Assistant 📄
+# ✨📚 Google AI Destekli Çoklu Sohbet PDF Asistanı / Google AI Powered Multi-Session PDF Assistant 📄
 
-Bu Streamlit uygulaması, kullanıcıların PDF dosyaları yükleyerek bu dosyaların içeriği hakkında sorular sormasına olanak tanır. Uygulama, her bir PDF seti için ayrı sohbet oturumları oluşturur ve yönetir, böylece kullanıcılar farklı belgelerle ilgili sohbetlerini ayrı ayrı tutabilirler.
+Bu Streamlit uygulaması, kullanıcıların PDF dosyaları yükleyerek bu dosyaların içeriği hakkında sorular sormasına olanak tanır. Genel sorular sorulduğunda ("Bu PDF ne hakkında?"), uygulama PDF içeriğinden bir özet veya örnek sorular türetmeye çalışır. Spesifik sorular için ise, yüklenen PDF'leri kaynak olarak kullanarak yanıtlar üretir. Uygulama, her bir PDF seti için ayrı sohbet oturumları oluşturur ve yönetir.
 
-This Streamlit application allows users to upload PDF files and ask questions about their content. The application creates and manages separate chat sessions for each set of PDFs, enabling users to keep their conversations related to different documents separate.
+This Streamlit application allows users to upload PDF files and ask questions about their content. When general questions are asked (e.g., "What is this PDF about?"), the application attempts to generate a summary or sample questions from the PDF content. For specific questions, it generates answers using the uploaded PDFs as a source. The application creates and manages separate chat sessions for each set of PDFs.
 
 ---
 
 ## 🇹🇷 Türkçe Açıklama
 
-### ✨ Özellikler
+### ✨ Öne Çıkan Özellikler
 
-*   **PDF Yükleme:** Birden fazla PDF dosyası yüklenebilir.
-*   **İçerik Tabanlı Soru Cevaplama:** Yüklenen PDF'lerin içeriğine dayalı olarak sorulara yanıt verir.
-*   **Çoklu Sohbet Oturumları:** Her PDF seti veya sorgu için ayrı sohbet oturumları oluşturulabilir ve yönetilebilir.
-*   **Yerel Embedding Modeli:** Metinleri vektörlere dönüştürmek için yerel bir `sentence-transformers` modeli kullanır (örn: `all-MiniLM-L6-v2`). Bu, embedding işlemi için API anahtarı gerektirmez ve verileriniz bu aşamada dışarı çıkmaz.
-*   **OpenRouter Entegrasyonu:** Büyük Dil Modeli (LLM) yanıtları için OpenRouter.ai platformu üzerinden çeşitli (ücretsiz veya ücretli) modellere erişim sağlar.
-*   **Sohbet Geçmişi:** Her oturum için sohbet geçmişi tutulur.
-*   **Kısıtlayıcı Prompting:** LLM'in sadece yüklenen PDF içeriğine odaklanmasını sağlamak ve dışarıdan bilgi kullanmasını engellemek için özel olarak tasarlanmış prompt şablonu kullanılır.
+*   **PDF Yükleme:** Bir veya daha fazla PDF dosyası yüklenebilir.
+*   **İçerik Tabanlı Soru Cevaplama (RAG):** Yüklenen PDF'lerin içeriğine dayalı olarak spesifik sorulara yanıt verir.
+*   **Genel Soru Anlama ve Yanıtlama:** "Bu PDF ne hakkında?" gibi genel sorulara, PDF'ten özet veya örnek sorular türeterek yanıt vermeye çalışır.
+    *   Bu özellik için **Langchain PydanticOutputParser** kullanılarak yapılandırılmış çıktı (JSON) hedeflenir.
+*   **Çoklu Sohbet Oturumları:** Her PDF seti veya başlatılan sohbet için ayrı oturumlar oluşturulabilir, seçilebilir ve yönetilebilir.
+*   **Google Generative AI Entegrasyonu:**
+    *   **LLM:** Metin üretimi ve soruları yanıtlama için Google'ın Gemini modelleri (örn: `gemini-1.5-flash-latest`) kullanılır.
+    *   **Embedding:** Metinleri vektörlere dönüştürmek için Google'ın embedding modelleri (örn: `models/embedding-001`) kullanılır.
+*   **Sohbet Geçmişi:** Her oturum için ayrı sohbet geçmişi tutulur.
+*   **Kısıtlayıcı Prompt Mühendisliği:** LLM'in sadece yüklenen PDF içeriğine odaklanmasını sağlamak ve dışarıdan bilgi kullanmasını engellemek için özel olarak tasarlanmış prompt şablonları kullanılır.
 
 ### 🚀 Kurulum ve Çalıştırma
 
@@ -40,18 +43,18 @@ This Streamlit application allows users to upload PDF files and ask questions ab
     pip install -r requirements.txt
     ```
 
-4.  **API Anahtarlarını Ayarlayın (Streamlit Secrets):**
+4.  **Google API Anahtarını Ayarlayın (Streamlit Secrets):**
     Projenizin ana dizininde `.streamlit` adında bir klasör oluşturun ve içine `secrets.toml` adında bir dosya ekleyin.
     ```toml
     # .streamlit/secrets.toml
 
-    OPENROUTER_API_KEY = "sk-or-v1-SENIN_OPENROUTER_API_ANAHTARIN"
+    GOOGLE_API_KEY = "SENIN_GOOGLE_AI_STUDIO_API_ANAHTARIN"
 
-    # İsteğe bağlı: Kullanılacak LLM ve yerel embedding modellerini değiştirmek için
-    # LLM_MODEL_NAME = "mistralai/mistral-7b-instruct:free"
-    # LOCAL_EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+    # İsteğe bağlı: Kullanılacak Google AI modellerini değiştirmek için
+    # GOOGLE_LLM_MODEL_NAME = "gemini-1.5-flash-latest"
+    # GOOGLE_EMBEDDING_MODEL_NAME = "models/embedding-001"
     ```
-    **Not:** `SENIN_OPENROUTER_API_ANAHTARIN` kısmını kendi OpenRouter API anahtarınızla değiştirin. OpenRouter.ai sitesinden ücretsiz bir hesap oluşturup API anahtarı alabilirsiniz.
+    **Not:** `SENIN_GOOGLE_AI_STUDIO_API_ANAHTARIN` kısmını kendi Google AI Studio'dan aldığınız API anahtarınızla değiştirin.
 
 5.  **Uygulamayı Çalıştırın:**
     ```bash
@@ -61,30 +64,32 @@ This Streamlit application allows users to upload PDF files and ask questions ab
 
 ### 🛠️ Nasıl Çalışır?
 
-1.  Kullanıcı bir veya daha fazla PDF dosyası yükler.
-2.  Uygulama, PDF'lerden metinleri çıkarır ve daha küçük parçalara (chunks) böler.
-3.  Yerel bir `sentence-transformers` modeli kullanılarak bu metin parçaları vektörlere (embeddings) dönüştürülür.
-4.  Bu vektörler, hızlı benzerlik araması için bir FAISS vektör deposunda saklanır.
-5.  Kullanıcı bir soru sorduğunda:
-    *   Sorunun vektörüne en yakın olan metin parçaları (ilgili bağlam) vektör deposundan alınır.
-    *   Bu bağlam ve kullanıcının sorusu, LLM'i sadece sağlanan bilgiyi kullanmaya yönlendiren özel bir prompt şablonu kullanılarak formatlanır.
-    *   Formatlanmış prompt, OpenRouter üzerinden seçilen LLM'e gönderilir.
-    *   LLM'den gelen yanıt kullanıcıya gösterilir.
-6.  Her PDF seti için (veya başlatılan her yeni sohbet için) ayrı sohbet oturumları tutulur ve yönetilir.
+1.  Kullanıcı bir sohbet oturumu başlatır veya mevcut birini seçer.
+2.  Seçili oturum için bir veya daha fazla PDF dosyası yükler ve "İşle" butonuna tıklar.
+3.  Uygulama, PDF'lerden metinleri çıkarır ve daha küçük parçalara (chunks) böler. Bu chunk'lar hem RAG için hem de genel sorulara yanıt için saklanır.
+4.  Google'ın embedding modeli kullanılarak bu metin parçaları vektörlere (embeddings) dönüştürülür.
+5.  Bu vektörler, hızlı benzerlik araması için bir FAISS vektör deposunda saklanır (aktif oturuma özel).
+6.  Kullanıcı bir soru sorduğunda:
+    *   **Genel Soru İse:** Kullanıcının sorusu genel bir ifade içeriyorsa (örn: "PDF ne hakkında?"), saklanan metin chunk'larının bir kısmı ve yapılandırılmış çıktı (özet veya örnek sorular) için özel bir prompt şablonu kullanılarak Google Gemini LLM'ine istek gönderilir. Yanıt, PydanticOutputParser ile parse edilerek kullanıcıya sunulur.
+    *   **Spesifik Soru İse (RAG):** Sorunun vektörüne en yakın olan metin parçaları (ilgili bağlam) FAISS vektör deposundan alınır. Bu bağlam ve kullanıcının sorusu, LLM'i sadece sağlanan bilgiyi kullanmaya yönlendiren kısıtlayıcı bir RAG prompt şablonu kullanılarak formatlanır. Formatlanmış prompt, Google Gemini LLM'ine gönderilir ve yanıt kullanıcıya gösterilir.
+7.  Her sohbet oturumunun kendi PDF bilgisi, vektör deposu ve sohbet geçmişi ayrı olarak tutulur.
 
 ---
 
 ## 🇬🇧🇺🇸 English Description
 
-### ✨ Features
+### ✨ Key Features
 
-*   **PDF Upload:** Allows uploading multiple PDF files.
-*   **Content-Based Q&A:** Answers questions based on the content of the uploaded PDFs.
-*   **Multi-Session Chat:** Create and manage separate chat sessions for each set of PDFs or queries.
-*   **Local Embedding Model:** Uses a local `sentence-transformers` model (e.g., `all-MiniLM-L6-v2`) to convert text into vectors. This does not require an API key for the embedding process, and your data stays local during this step.
-*   **OpenRouter Integration:** Accesses various Large Language Models (LLMs) (free or paid) via the OpenRouter.ai platform for generating responses.
-*   **Chat History:** Maintains chat history for each session.
-*   **Constrained Prompting:** Utilizes a specifically designed prompt template to ensure the LLM focuses solely on the uploaded PDF content and prevents it from using external knowledge.
+*   **PDF Upload:** Allows uploading one or more PDF files.
+*   **Content-Based Q&A (RAG):** Answers specific questions based on the content of the uploaded PDFs.
+*   **General Query Understanding and Response:** When asked general questions (e.g., "What is this PDF about?"), it attempts to generate a summary or sample questions from the PDF content.
+    *   Utilizes **Langchain PydanticOutputParser** for structured output (JSON) for this feature.
+*   **Multi-Session Chat:** Create, select, and manage separate chat sessions for each set of PDFs or initiated chats.
+*   **Google Generative AI Integration:**
+    *   **LLM:** Uses Google's Gemini models (e.g., `gemini-1.5-flash-latest`) for text generation and answering questions.
+    *   **Embedding:** Uses Google's embedding models (e.g., `models/embedding-001`) to convert text into vectors.
+*   **Chat History:** Maintains a separate chat history for each session.
+*   **Constrained Prompt Engineering:** Utilizes specifically designed prompt templates to ensure the LLM focuses solely on the uploaded PDF content and prevents it from using external knowledge.
 
 ### 🚀 Setup and Running
 
@@ -108,18 +113,18 @@ This Streamlit application allows users to upload PDF files and ask questions ab
     pip install -r requirements.txt
     ```
 
-4.  **Set Up API Keys (Streamlit Secrets):**
+4.  **Set Up Google API Key (Streamlit Secrets):**
     In your project's root directory, create a folder named `.streamlit` and add a file named `secrets.toml` inside it.
     ```toml
     # .streamlit/secrets.toml
 
-    OPENROUTER_API_KEY = "sk-or-v1-YOUR_OPENROUTER_API_KEY"
+    GOOGLE_API_KEY = "YOUR_GOOGLE_AI_STUDIO_API_KEY"
 
-    # Optional: To change the LLM and local embedding models used
-    # LLM_MODEL_NAME = "mistralai/mistral-7b-instruct:free"
-    # LOCAL_EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+    # Optional: To change the Google AI models used
+    # GOOGLE_LLM_MODEL_NAME = "gemini-1.5-flash-latest"
+    # GOOGLE_EMBEDDING_MODEL_NAME = "models/embedding-001"
     ```
-    **Note:** Replace `YOUR_OPENROUTER_API_KEY` with your actual OpenRouter API key. You can get a free API key by signing up at OpenRouter.ai.
+    **Note:** Replace `YOUR_GOOGLE_AI_STUDIO_API_KEY` with your actual API key obtained from Google AI Studio.
 
 5.  **Run the Application:**
     ```bash
@@ -129,16 +134,15 @@ This Streamlit application allows users to upload PDF files and ask questions ab
 
 ### 🛠️ How It Works
 
-1.  The user uploads one or more PDF files.
-2.  The application extracts text from the PDFs and splits it into smaller chunks.
-3.  These text chunks are converted into vector embeddings using a local `sentence-transformers` model.
-4.  These vectors are stored in a FAISS vector store for efficient similarity searches.
-5.  When the user asks a question:
-    *   The text chunks most similar to the question's vector (relevant context) are retrieved from the vector store.
-    *   This context and the user's question are formatted using a custom prompt template designed to guide the LLM to use only the provided information.
-    *   The formatted prompt is sent to the selected LLM via OpenRouter.
-    *   The response from the LLM is displayed to the user.
-6.  Separate chat sessions are maintained and managed for each set of PDFs (or each new chat initiated).
+1.  The user starts a new chat session or selects an existing one.
+2.  For the selected session, the user uploads one or more PDF files and clicks "Process."
+3.  The application extracts text from the PDFs and splits it into smaller chunks. These chunks are stored for both RAG and answering general questions.
+4.  These text chunks are converted into vector embeddings using Google's embedding model.
+5.  These vectors are stored in a FAISS vector store, specific to the active session, for efficient similarity searches.
+6.  When the user asks a question:
+    *   **If it's a General Question:** If the user's query contains general phrasing (e.g., "What is this PDF about?"), a portion of the stored text chunks and a special prompt template for structured output (summary or sample questions) are used to send a request to the Google Gemini LLM. The response is parsed using PydanticOutputParser and presented to the user.
+    *   **If it's a Specific Question (RAG):** The text chunks most similar to the question's vector (relevant context) are retrieved from the FAISS vector store. This context and the user's question are formatted using a constrained RAG prompt template that guides the LLM to use only the provided information. The formatted prompt is sent to the Google Gemini LLM, and the response is displayed.
+7.  Each chat session maintains its own PDF information, vector store, and chat history separately.
 
 ---
 
@@ -146,15 +150,11 @@ This Streamlit application allows users to upload PDF files and ask questions ab
 
 ```txt
 streamlit
-openai
 pypdf
 langchain
-langchain-huggingface
-sentence-transformers
+langchain-google-genai
 faiss-cpu
 tiktoken
-torch==2.1.2
-torchvision==0.16.2
-torchaudio==2.1.2
 numpy<2.0
+pydantic
 uuid

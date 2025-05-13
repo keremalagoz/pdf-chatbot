@@ -1,6 +1,6 @@
 streamlit
 openai
-pypdf
+pypdf2
 langchain  # Temel Langchain paketi
 langchain_community # Eğer başka bir şey için gerekmiyorsa kaldırılabilir
 langchain-huggingface # YENİ PAKET

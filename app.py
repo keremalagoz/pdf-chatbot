@@ -17,6 +17,7 @@ import uuid
 # SAYFA KONFİGÜRASYONU - İLK STREAMLIT KOMUTU OLMALI!
 # -----------------------------------------------------------------------------
 st.set_page_config(page_title="Google AI PDF Asistanı", page_icon="✨📚")
+#bende burdayım kardeş
 # -----------------------------------------------------------------------------
 
 # os.environ["TOKENIZERS_PARALLELISM"] = "false" # HuggingFace için gerekliydi

@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field # Pydantic modelleri için
 from typing import List, Optional, Union # Tip ipuçları için
 import traceback
 import uuid
+import asyncio # <-- GEREKLİ EKLEME
 
 # -----------------------------------------------------------------------------
 # SAYFA KONFİGÜRASYONU - İLK STREAMLIT KOMUTU OLMALI!
@@ -19,8 +20,6 @@ import uuid
 st.set_page_config(page_title="Google AI PDF Asistanı", page_icon="✨📚")
 #bende burdayım kardeş
 # -----------------------------------------------------------------------------
-
-# os.environ["TOKENIZERS_PARALLELISM"] = "false" # HuggingFace için gerekliydi
 
 # --- Streamlit Secrets ve Google AI Konfigürasyonu ---
 GOOGLE_API_KEY = st.secrets.get("GOOGLE_API_KEY")
@@ -45,6 +44,19 @@ output_parser_global = PydanticOutputParser(pydantic_object=DocumentAnalysisOutp
 # --- LLM ve Embedding İstemcileri ---
 @st.cache_resource # Embedding modelini global olarak cache'le
 def load_google_embedding_model(api_key, model_name):
+    """
+    DÜZELTİLMİŞ FONKSİYON: Bu fonksiyon, istemciyi başlatmadan önce
+    mevcut iş parçacığı için bir asyncio event loop'u olmasını sağlar.
+    """
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError as e:
+        if "no current event loop" in str(e):
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        else:
+            raise
+
     try:
         print(f"Google AI Embedding istemcisi yükleniyor: {model_name}")
         model = GoogleGenerativeAIEmbeddings(model=model_name, google_api_key=api_key)
@@ -57,13 +69,25 @@ def load_google_embedding_model(api_key, model_name):
 
 @st.cache_resource # LLM client'ını da cache'leyebiliriz
 def load_google_llm_client(api_key, model_name):
+    """
+    DÜZELTİLMİŞ FONKSİYON: Bu fonksiyon, istemciyi başlatmadan önce
+    mevcut iş parçacığı için bir asyncio event loop'u olmasını sağlar.
+    """
+    try:
+        loop = asyncio.get_event_loop()
+    except RuntimeError as e:
+        if "no current event loop" in str(e):
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        else:
+            raise
+            
     try:
         print(f"Google AI LLM istemcisi yükleniyor: {model_name}")
         client = ChatGoogleGenerativeAI(
             model=model_name,
             google_api_key=api_key,
-            temperature=0.2, # Biraz daha deterministik olması için
-            # convert_system_message_to_human=True # Gerekirse
+            temperature=0.2,
         )
         print("Google AI LLM istemcisi başarıyla yüklendi.")
         return client
@@ -292,7 +316,7 @@ if active_session_data:
                             # JSON ayıklama (LLM bazen ```json ... ``` bloğu ekler)
                             json_part = raw_llm_output
                             if "```json" in raw_llm_output:
-                                json_part = raw_llm_output.split("```json", 1)[1].split("```", 1)[0].strip()
+                                json_part = raw_llm_output.split("```json", 1)[1].split("```", 1).strip()
                             elif "```" in raw_llm_output and raw_llm_output.strip().startswith("```") and raw_llm_output.strip().endswith("```"):
                                 json_part = raw_llm_output.strip()[3:-3].strip()
                             
